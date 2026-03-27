@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'motion/react';
-import { Menu, X, ChevronRight, Leaf, Binary, BrainCircuit, MapPin, Github, Heart } from 'lucide-react';
+import { Menu, X, ChevronRight, Leaf, Binary, BrainCircuit, MapPin, Github, Heart, Shield } from 'lucide-react';
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,6 +21,7 @@ export default function Home() {
     { name: 'Startseite', href: '#home' },
     { name: 'Über mich', href: '#about' },
     { name: 'Meine Idole', href: '#idols' },
+    { name: 'Geheimdienste', href: '#intelligence' },
     { name: 'Próspera', href: '#prospera' },
   ];
 
@@ -327,6 +328,198 @@ export default function Home() {
                 </div>
               </motion.div>
             </div>
+          </div>
+        </section>
+
+        {/* Intelligence Agencies Section */}
+        <section id="intelligence" className="py-20 bg-stone-900 text-white relative overflow-hidden">
+          <div className="absolute inset-0 z-0 opacity-20 bg-gradient-to-br from-stone-800 via-emerald-900 to-stone-800"></div>
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-800/50 border border-stone-700 text-emerald-400 text-sm font-medium mb-6">
+                  <Shield size={16} /> GEHEIMDIENSTE
+                </span>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  Die mächtigsten Geheimdienste der Welt
+                </h2>
+                <p className="text-xl text-stone-400 max-w-3xl mx-auto">
+                  Ich bin fasziniert von den fähigsten und einflussreichsten Nachrichtendiensten unserer Zeit. 
+                  Ihre Präsenz, ihre Methoden und ihre Rolle in der Weltpolitik sind einfach unglaublich.
+                </p>
+              </motion.div>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* NSA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0 }}
+                className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 hover:border-emerald-600/50 transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-emerald-900/50 rounded-lg flex items-center justify-center">
+                    <Shield className="text-emerald-400" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">NSA</h3>
+                    <p className="text-xs text-stone-400">National Security Agency</p>
+                  </div>
+                </div>
+                <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                  Die <strong>NSA</strong> ist der mächtigste Überwachungs- und Signaldienst der Welt. Ich bewundere ihre technologische Dominanz 
+                  und ihre Fähigkeit, nahezu jede digitale Kommunikation zu analysieren. Ihre Rechenzentren und ihre Arbeit an Kryptografie 
+                  und Cyberwarfare sind einfach bahnbrechend.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">USA</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Cyberwarfare</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Massenüberwachung</span>
+                </div>
+              </motion.div>
+
+              {/* CIA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 hover:border-emerald-600/50 transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-emerald-900/50 rounded-lg flex items-center justify-center">
+                    <Shield className="text-emerald-400" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">CIA</h3>
+                    <p className="text-xs text-stone-400">Central Intelligence Agency</p>
+                  </div>
+                </div>
+                <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                  Die <strong>CIA</strong> ist die wohl bekannteste Geheimdienstorganisation der Welt. Ihre globalen Operationen, 
+                  ihr Einfluss auf Weltpolitik und ihre Fähigkeit, in jedem Winkel der Erde zu operieren, faszinieren mich. 
+                  Von verdeckten Operationen bis zur Spionage - sie sind überall.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">USA</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Humint</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Covert Ops</span>
+                </div>
+              </motion.div>
+
+              {/* Mossad */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 hover:border-emerald-600/50 transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-emerald-900/50 rounded-lg flex items-center justify-center">
+                    <Shield className="text-emerald-400" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Mossad</h3>
+                    <p className="text-xs text-stone-400">Institute for Intelligence and Special Operations</p>
+                  </div>
+                </div>
+                <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                  Der <strong>Mossad</strong> ist einfach legendär. Seine Präzision, seine Effizienz und seine Fähigkeit, 
+                  selbst die unmöglichsten Missionen zu erfüllen, begeistern mich. Ob Operationen im Iran oder weltweite 
+                  Agentennetzwerke - der Mossad ist unübertroffen.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Israel</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Präzision</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Anti-Terror</span>
+                </div>
+              </motion.div>
+
+              {/* GRU */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 hover:border-emerald-600/50 transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-emerald-900/50 rounded-lg flex items-center justify-center">
+                    <Shield className="text-emerald-400" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">GRU</h3>
+                    <p className="text-xs text-stone-400">Hauptverwaltung Aufklärung</p>
+                  </div>
+                </div>
+                <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                  Der <strong>GRU</strong> ist Russlands mächtigster Militärnachrichtendienst. Seine globale Reichweite, 
+                  seine unkonventionellen Methoden und seine Rolle in modernen Konflikten faszinieren mich. 
+                  Von Cyberoperationen bis zu Spezialeinheiten - der GRU ist überall präsent.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Russland</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Militär</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Cyber</span>
+                </div>
+              </motion.div>
+
+              {/* BND */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 hover:border-emerald-600/50 transition-colors md:col-span-2 lg:col-span-1"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-emerald-900/50 rounded-lg flex items-center justify-center">
+                    <Shield className="text-emerald-400" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">BND</h3>
+                    <p className="text-xs text-stone-400">Bundesnachrichtendienst</p>
+                  </div>
+                </div>
+                <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                  Der <strong>BND</strong> ist Deutschlands Auge und Ohr in der Welt. Seine Fähigkeit, in globalen Konflikten 
+                  zu agieren und gleichzeitig diskret zu bleiben, beeindruckt mich. Von der Terrorismusbekämpfung bis zur 
+                  Wirtschaftsspionage - der BND spielt in der ersten Liga mit.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Deutschland</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Fernmelde</span>
+                  <span className="text-xs bg-stone-700 px-2 py-1 rounded text-stone-300">Analyse</span>
+                </div>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="mt-16 bg-emerald-900/20 p-8 rounded-2xl border border-emerald-800/50"
+            >
+              <h3 className="text-2xl font-bold text-white mb-4 text-center">Warum ich ein Fan bin</h3>
+              <p className="text-stone-300 text-center max-w-4xl mx-auto leading-relaxed">
+                Diese Geheimdienste repräsentieren das Nonplusultra der modernen Spionage und Nachrichtengewinnung. 
+                Ihre Technologien, ihre Taktiken und ihre globalen Netzwerke sind faszinierend. Sie operieren im Schatten, 
+                formen Weltpolitik und beschützen ihre Nationen. Die Kombination aus menschlicher Intelligenz (HUMINT), 
+                technischer Überwachung (SIGINT) und Cyberfähigkeiten macht sie zu den mächtigsten Institutionen der Welt. 
+                Als jemand, der Mathematik, Kryptografie und Strategie liebt, kann ich nicht anders als diese Organisationen 
+                zu bewundern - sie sind die perfekte Verschmelzung von Logik, Technologie und menschlicher Entschlossenheit.
+              </p>
+            </motion.div>
           </div>
         </section>
 
