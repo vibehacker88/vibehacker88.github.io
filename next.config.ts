@@ -8,10 +8,11 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  // GitHub Pages configuration
+  // GitHub Pages configuration for user site (served at root)
   output: 'export',
   distDir: 'dist',
-  basePath: '/vibehacker88.github.io',
+  basePath: '',
+  assetPrefix: '',
   images: {
     unoptimized: true,
     remotePatterns: [
