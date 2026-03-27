@@ -1,280 +1,400 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'motion/react';
-import { Menu, X, ChevronRight, BrainCircuit, Binary } from 'lucide-react';
+import { FileText, Download, ChevronRight, ExternalLink } from 'lucide-react';
 
-export default function Home() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const VampireChecker = () => {
+  const [input, setInput] = useState('1260');
+  const [result, setResult] = useState('');
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navLinks = [
-    { name: 'Startseite', href: '#home' },
-    { name: 'Clifford A. Pickover', href: '#pickover' },
-    { name: 'Weitere RÃ¤tselmeister', href: '#masters' },
-  ];
+  const check = () => {
+    if (!/^\d{4}$/.test(input)) {
+      setResult('Bitte genau 4 Ziffern eingeben.');
+      return;
+    }
+    const num = parseInt(input);
+    for (let i = 10; i < 100; i++) {
+      for (let j = i; j < 100; j++) {
+        if (i * j === num) {
+          const strV = input.split('').sort().join('');
+          const strFangs = (i.toString() + j.toString()).split('').sort().join('');
+          if (strV === strFangs && !(i % 10 === 0 && j % 10 === 0)) {
+            setResult(`? ${num} ist eine Vampirzahl! (Reißzähne: ${i} × ${j})`);
+            return;
+          }
+        }
+      }
+    }
+    setResult(`? ${num} ist keine 4-stellige Vampirzahl.`);
+  };
 
   return (
-    <div className="min-h-screen bg-stone-50 font-sans text-stone-800">
-      {/* Navigation */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white shadow-md py-3' : 'bg-white/90 backdrop-blur-sm py-5'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <a href="#" className="flex items-center gap-2 group">
-            <div className="bg-emerald-700 text-white p-2 rounded-lg group-hover:bg-emerald-600 transition-colors">
-              <Binary size={24} />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-stone-900">VibeHacker88</span>
-          </a>
+    <div className="bg-gray-50 p-5 border border-gray-200 rounded-sm mt-6">
+      <h4 className="font-bold text-[#1a365d] mb-2">Interaktives Modul: Vampirzahlen-Detektor</h4>
+      <p className="text-sm text-gray-600 mb-4">Clifford Pickover prägte 1994 den Begriff der &quot;Vampirzahlen&quot;. Testen Sie eine 4-stellige Zahl (z.B. 1260, 1395, 1435):</p>
+      <div className="flex gap-2">
+        <input type="text" value={input} onChange={e => setInput(e.target.value)} maxLength={4} className="border border-gray-300 px-3 py-2 rounded-sm w-32 focus:outline-none focus:border-[#1a365d]" />
+        <button onClick={check} className="bg-[#1a365d] text-white px-5 py-2 rounded-sm hover:bg-[#2a4a7f] transition-colors font-semibold">Prüfen</button>
+      </div>
+      {result && <p className="mt-4 font-mono text-sm font-semibold text-red-600">{result}</p>}
+    </div>
+  );
+};
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-sm font-medium text-stone-600 hover:text-emerald-700 transition-colors"
-              >
-                {link.name}
-              </a>
-            ))}
-          </nav>
+const GruQuiz = () => {
+  const [step, setStep] = useState(0);
+  const [score, setScore] = useState(0);
+  const questions = [
+    { q: "In welchem Jahr wurde die GRU gegründet?", options: ["1917", "1918", "1945", "1991"], a: 1 },
+    { q: "Wer war der Gründer der GRU?", options: ["Josef Stalin", "Wladimir Lenin", "Leo Trotzki", "Felix Dserschinski"], a: 2 },
+    { q: "Welche Spezialeinheit untersteht operativ der GRU?", options: ["Alpha Group", "Vympel", "Spetsnaz", "Zaslon"], a: 2 }
+  ];
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-stone-600 hover:text-stone-900"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+  const handleAnswer = (idx: number) => {
+    if (idx === questions[step].a) setScore(score + 1);
+    setStep(step + 1);
+  };
+
+  if (step >= questions.length) {
+    return (
+      <div className="bg-[#1a365d] text-white p-6 mt-6 rounded-sm border-l-4 border-red-600">
+        <h4 className="font-bold text-lg mb-2">Quiz Abgeschlossen</h4>
+        <p>Ihre Sicherheitsfreigabe-Punktzahl: {score} / {questions.length}</p>
+        <button onClick={() => {setStep(0); setScore(0);}} className="mt-4 bg-white text-[#1a365d] px-4 py-2 text-sm font-bold hover:bg-gray-200 transition-colors">Erneut versuchen</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gray-50 p-6 border border-gray-200 mt-6 rounded-sm">
+      <h4 className="font-bold text-[#1a365d] mb-4">Sicherheitsüberprüfung: GRU-Historie</h4>
+      <p className="text-sm font-semibold mb-3 text-gray-500">Frage {step + 1} von {questions.length}</p>
+      <p className="mb-4 font-medium text-gray-800">{questions[step].q}</p>
+      <div className="space-y-2">
+        {questions[step].options.map((opt, i) => (
+          <button key={i} onClick={() => handleAnswer(i)} className="block w-full text-left px-4 py-3 bg-white border border-gray-300 hover:bg-[#1a365d] hover:text-white transition-colors text-sm font-medium">
+            {opt}
           </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Timeline = () => {
+  const events = [
+    { year: "1918", title: "Gründung", desc: "Auf Befehl von Leo Trotzki als Registrierungsdirektorat gegründet, um militärische Aufklärung zu zentralisieren." },
+    { year: "1940er", title: "Rote Kapelle", desc: "Umfangreiche nachrichtendienstliche Operationen in Westeuropa während des Zweiten Weltkriegs." },
+    { year: "1992", title: "Post-Sowjetische Ära", desc: "Integration in die Streitkräfte der neu gegründeten Russischen Föderation." },
+    { year: "2010+", title: "Cyber-Operationen", desc: "Zunehmender Fokus auf asymmetrische Kriegsführung, Kryptographie und Cyber-Aufklärung (z.B. APT28)." }
+  ];
+  return (
+    <div className="mt-8 border-l-2 border-red-600 ml-3 space-y-6">
+      {events.map((ev, i) => (
+        <div key={i} className="relative pl-6">
+          <div className="absolute w-3 h-3 bg-[#1a365d] rounded-full -left-[7px] top-1.5 border-2 border-white"></div>
+          <h5 className="font-bold text-[#1a365d]">{ev.year}: {ev.title}</h5>
+          <p className="text-sm text-gray-600 mt-1 leading-relaxed">{ev.desc}</p>
         </div>
+      ))}
+    </div>
+  );
+};
 
-        {/* Mobile Nav */}
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-stone-100 py-4 px-4 flex flex-col gap-4"
-          >
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-medium text-stone-700 hover:text-emerald-700 p-2 rounded-md hover:bg-stone-50"
-              >
-                {link.name}
-              </a>
-            ))}
-          </motion.div>
-        )}
-      </header>
+const TabHome = () => (
+  <>
+    <div className="mb-10 relative h-72 w-full bg-gray-200 rounded-sm overflow-hidden shadow-inner">
+      <Image 
+        src="https://picsum.photos/seed/mathematics-intelligence/800/400" 
+        alt="CAP-GRU Facility" 
+        fill 
+        className="object-cover"
+        referrerPolicy="no-referrer"
+      />
+      <div className="absolute bottom-0 left-0 right-0 bg-[#1a365d] bg-opacity-90 text-white p-3 text-sm font-medium border-t-2 border-red-600">
+        Forschungscampus für fraktale Geometrie und verdeckte Operationen
+      </div>
+    </div>
 
-      <main>
-        {/* Hero Section */}
-        <section id="home" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="https://picsum.photos/seed/forestmath/1920/1080?blur=2"
-              alt="Background blending nature and mathematics"
-              fill
-              className="object-cover opacity-20"
-              referrerPolicy="no-referrer"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-stone-50/80 via-stone-50/95 to-stone-50"></div>
-          </div>
-          
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+    <section className="mb-12">
+      <h2 className="text-2xl font-extrabold text-[#1a365d] mb-6 border-b-2 border-gray-200 pb-3 flex items-center">
+        <span className="w-2 h-6 bg-red-600 mr-3 inline-block"></span>
+        Grundsätzliches Selbstverständnis – Unser Leitbild
+      </h2>
+      <div className="space-y-5 text-gray-700 leading-relaxed text-[15px]">
+        <p>
+          Willkommen bei der <strong>CAP-GRU</strong>. Unser Verein verbindet die grenzenlose mathematische und philosophische Neugier von <em>Clifford A. Pickover</em> mit der operativen Präzision und strategischen Weitsicht der <em>Glavnoye Razvedyvatelnoye Upravlenie (GRU)</em>. 
+        </p>
+        <p>
+          Wir glauben, dass das Verständnis höherer Dimensionen, fraktaler Geometrie und der Geheimnisse des Universums untrennbar mit der Sammlung und Auswertung globaler Geheimdienstinformationen verbunden ist. Unser Leitbild basiert auf der Annahme, dass die Realität ein komplexes Muster ist, das nur durch rigorose mathematische Analyse und verdeckte Aufklärung entschlüsselt werden kann.
+        </p>
+        <p>
+          In unserer Einrichtung fördern wir Individuen, die sowohl die Schönheit von Möbius-Bändern schätzen als auch in der Lage sind, asymmetrische Bedrohungslagen im kybernetischen Raum zu neutralisieren.
+        </p>
+      </div>
+    </section>
+
+    <section className="mb-12">
+      <h2 className="text-2xl font-extrabold text-[#1a365d] mb-6 border-b-2 border-gray-200 pb-3 flex items-center">
+        <span className="w-2 h-6 bg-red-600 mr-3 inline-block"></span>
+        Ziele unserer pädagogischen Arbeit
+      </h2>
+      <div className="space-y-5 text-gray-700 leading-relaxed text-[15px]">
+        <p>
+          Die pädagogische Arbeit der CAP-GRU zielt darauf ab, junge Talente in einem ganzheitlichen Ansatz zu fördern. Zu unseren Kernzielen gehören:
+        </p>
+        <ul className="list-none space-y-4 mt-4">
+          <li className="flex items-start">
+            <ChevronRight className="w-5 h-5 mr-2 text-red-600 flex-shrink-0 mt-0.5" />
+            <span><strong>Kognitive Expansion:</strong> Studium von Pickovers &quot;The Math Book&quot; zur Erweiterung des Verständnisses für Unendlichkeit und Paradoxien.</span>
+          </li>
+          <li className="flex items-start">
+            <ChevronRight className="w-5 h-5 mr-2 text-red-600 flex-shrink-0 mt-0.5" />
+            <span><strong>Operative Resilienz:</strong> Physisches und psychologisches Training nach den Standards der Spetsnaz-Spezialeinheiten.</span>
+          </li>
+          <li className="flex items-start">
+            <ChevronRight className="w-5 h-5 mr-2 text-red-600 flex-shrink-0 mt-0.5" />
+            <span><strong>Kryptographische Exzellenz:</strong> Entwicklung unknackbarer Chiffren unter Verwendung mehrdimensionaler mathematischer Modelle.</span>
+          </li>
+          <li className="flex items-start">
+            <ChevronRight className="w-5 h-5 mr-2 text-red-600 flex-shrink-0 mt-0.5" />
+            <span><strong>Globale Integration:</strong> Vorbereitung auf den verdeckten Einsatz in internationalen mathematischen Fakultäten und Forschungseinrichtungen.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </>
+);
+
+const TabPickover = () => (
+  <>
+    <section className="mb-12">
+      <h2 className="text-2xl font-extrabold text-[#1a365d] mb-6 border-b-2 border-gray-200 pb-3 flex items-center">
+        <span className="w-2 h-6 bg-red-600 mr-3 inline-block"></span>
+        Clifford A. Pickover: Biografie &amp; Werk
+      </h2>
+      <div className="space-y-5 text-gray-700 leading-relaxed text-[15px]">
+        <p>
+          <strong>Clifford A. Pickover</strong> (*1957) ist ein US-amerikanischer Autor, Redakteur und Kolumnist in den Bereichen Wissenschaft, Mathematik, Science-Fiction und Innovation. Er hat über 50 Bücher veröffentlicht, die in mehr als einem Dutzend Sprachen übersetzt wurden.
+        </p>
+        <p>
+          Als Forscher am IBM Thomas J. Watson Research Center hat er über 700 US-Patente angemeldet. Seine Arbeit konzentriert sich auf die Visualisierung komplexer mathematischer Konzepte, fraktale Geometrie und die Grenzen des menschlichen Wissens.
+        </p>
+        
+        <h3 className="text-lg font-bold text-[#1a365d] mt-8 mb-4">Wichtige Werke &amp; Publikationen</h3>
+        <ul className="list-disc pl-5 space-y-3 mt-3 text-sm text-gray-700">
+          <li>
+            <a href="http://www.pickover.com/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline inline-flex items-center font-semibold">
+              Offizielle Website (pickover.com) <ExternalLink className="w-3 h-3 ml-1"/>
+            </a>
+            <p className="text-gray-500 mt-1">Das zentrale Portal für alle Veröffentlichungen und Rätsel von Clifford Pickover.</p>
+          </li>
+          <li>
+            <a href="https://en.wikipedia.org/wiki/The_Math_Book" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline inline-flex items-center font-semibold">
+              The Math Book (Wikipedia) <ExternalLink className="w-3 h-3 ml-1"/>
+            </a>
+            <p className="text-gray-500 mt-1">Von Pythagoras bis zur 57. Dimension – 250 Meilensteine der Mathematik.</p>
+          </li>
+          <li>
+            <a href="https://en.wikipedia.org/wiki/Vampire_number" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline inline-flex items-center font-semibold">
+              Vampirzahlen (Wikipedia) <ExternalLink className="w-3 h-3 ml-1"/>
+            </a>
+            <p className="text-gray-500 mt-1">Ein von Pickover 1994 in einem Usenet-Post eingeführtes mathematisches Konzept.</p>
+          </li>
+          <li>
+            <a href="https://sprott.physics.wisc.edu/fractals/pickover/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline inline-flex items-center font-semibold">
+              Pickover-Attraktoren <ExternalLink className="w-3 h-3 ml-1"/>
+            </a>
+            <p className="text-gray-500 mt-1">Visualisierungen chaotischer dynamischer Systeme, die er in den 1990er Jahren erforschte.</p>
+          </li>
+        </ul>
+
+        <h3 className="text-lg font-bold text-[#1a365d] mt-8 mb-4">Wissenschaftliche Beiträge &amp; Rätsel</h3>
+        <p>
+          Neben seinen Büchern ist Pickover berühmt für seine mathematischen Rätsel und die Entdeckung von Zahlenmustern. Die <em>Vampirzahlen</em> sind ein klassisches Beispiel für seine Fähigkeit, Mathematik spielerisch und mystisch zugleich zu präsentieren.
+        </p>
+        
+        <VampireChecker />
+      </div>
+    </section>
+  </>
+);
+
+const TabGRU = () => (
+  <>
+    <section className="mb-12">
+      <h2 className="text-2xl font-extrabold text-[#1a365d] mb-6 border-b-2 border-gray-200 pb-3 flex items-center">
+        <span className="w-2 h-6 bg-red-600 mr-3 inline-block"></span>
+        Die GRU: Historischer Kontext &amp; Operationen
+      </h2>
+      <div className="space-y-5 text-gray-700 leading-relaxed text-[15px]">
+        <p>
+          Die <strong>Glavnoye Razvedyvatelnoye Upravlenie (GRU)</strong> ist der militärische Nachrichtendienst der Russischen Föderation (und zuvor der Sowjetunion). Im Gegensatz zum zivilen KGB (heute SWR/FSB) konzentrierte sich die GRU stets auf militärische Aufklärung, Spezialeinsätze und in jüngerer Zeit auf globale Cyber-Operationen.
+        </p>
+        <p>
+          Die Verbindung zur Mathematik (und damit zu Konzepten wie denen von Pickover) ist tief in der Notwendigkeit verwurzelt, komplexe Verschlüsselungen zu brechen, Satellitenbahnen zu berechnen und asymmetrische Netzwerke im Cyberspace zu analysieren.
+        </p>
+
+        <h3 className="text-lg font-bold text-[#1a365d] mt-8 mb-4">Historische Zeitachse</h3>
+        <Timeline />
+
+        <h3 className="text-lg font-bold text-[#1a365d] mt-10 mb-4">Interaktives Modul: Wissensüberprüfung</h3>
+        <p>
+          Testen Sie Ihr Wissen über die Geschichte und Struktur der GRU. Nur Agenten mit ausreichender Punktzahl erhalten Zugang zu den höherdimensionalen Archiven.
+        </p>
+        <GruQuiz />
+      </div>
+    </section>
+  </>
+);
+
+const TabSynergy = () => (
+  <>
+    <section className="mb-12">
+      <h2 className="text-2xl font-extrabold text-[#1a365d] mb-6 border-b-2 border-gray-200 pb-3 flex items-center">
+        <span className="w-2 h-6 bg-red-600 mr-3 inline-block"></span>
+        Verwandte Konzepte: Die Synthese
+      </h2>
+      <div className="space-y-5 text-gray-700 leading-relaxed text-[15px]">
+        <p>
+          Warum kombinieren wir das Werk eines exzentrischen Mathematikers mit der Geschichte eines militärischen Nachrichtendienstes? Die Antwort liegt in der <strong>Mustererkennung</strong>.
+        </p>
+        <p>
+          Sowohl Clifford A. Pickover als auch die Analysten der GRU suchen nach verborgenen Strukturen im Chaos. Ob es sich um einen seltsamen Attraktor in einem dynamischen System oder um versteckte Kommunikationsmuster feindlicher Agenten handelt – die zugrunde liegende Mathematik ist oft identisch.
+        </p>
+        
+        <div className="bg-[#1a365d] text-white p-6 mt-6 rounded-sm shadow-inner">
+          <h4 className="font-bold text-lg mb-3 border-b border-gray-500 pb-2">Kernbereiche der Synergie</h4>
+          <ul className="space-y-3 mt-4">
+            <li><strong>Kryptographie:</strong> Primzahlen, Vampirzahlen und fraktale Schlüsselräume.</li>
+            <li><strong>Steganographie:</strong> Verstecken von Geheimdienstinformationen in computergenerierten Biomorph-Bildern.</li>
+            <li><strong>Signal Intelligence (SIGINT):</strong> Herausfiltern von Rauschen zur Erkennung mathematischer Anomalien in globalen Datenströmen.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </>
+);
+
+const Sidebar = () => (
+  <div className="w-full md:w-1/3 bg-[#f8f9fa] p-8 md:p-10 border-l border-gray-200">
+    <h3 className="text-xl font-extrabold text-[#1a365d] mb-8 flex items-center border-b-2 border-gray-200 pb-3">
+      Blick in die Einrichtung
+    </h3>
+
+    <div className="space-y-6">
+      <div className="bg-white p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-[#1a365d]">
+        <h4 className="font-bold text-[15px] text-[#1a365d] mb-2">Einladung zum Sommerfest 2026</h4>
+        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          Thema: &quot;Fraktale und Feldoperationen&quot;. Wir laden alle Mitglieder und Agenten herzlich ein.
+        </p>
+        <a href="#" className="inline-flex items-center text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
+          <FileText className="w-4 h-4 mr-2" />
+          2026_Sommerfest.pdf
+          <Download className="w-3 h-3 ml-2" />
+        </a>
+      </div>
+
+      <div className="bg-white p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-[#1a365d]">
+        <h4 className="font-bold text-[15px] text-[#1a365d] mb-2">Ehemaligenabend</h4>
+        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          Übernachtung im Zeltlager Tesserakt-&quot;Camp&quot;. Erfahrungsaustausch über angewandte Mathematik und verdeckte Operationen.
+        </p>
+        <a href="#" className="inline-flex items-center text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
+          <FileText className="w-4 h-4 mr-2" />
+          2025_Ehemaligenabend.pdf
+          <Download className="w-3 h-3 ml-2" />
+        </a>
+      </div>
+
+      <div className="bg-white p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-[#1a365d]">
+        <h4 className="font-bold text-[15px] text-[#1a365d] mb-2">Abschluss der Sanierung</h4>
+        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          Der Eichenhain für kybernetische Kriegsführung und Zahlentheorie wurde erfolgreich modernisiert.
+        </p>
+        <a href="#" className="inline-flex items-center text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
+          <FileText className="w-4 h-4 mr-2" />
+          Sanierung_Eichenhain.pdf
+          <Download className="w-3 h-3 ml-2" />
+        </a>
+      </div>
+      
+      <div className="mt-10 bg-[#1a365d] text-white p-6 shadow-inner border-t-4 border-red-600">
+        <h4 className="font-bold text-[15px] mb-3 flex items-center">
+          Kontakt &amp; Notfallprotokoll
+        </h4>
+        <p className="text-sm mb-4 text-gray-200 leading-relaxed">
+          Für verschlüsselte Kommunikation nutzen Sie bitte den Pickover-Vampir-Zahlen-Algorithmus.
+        </p>
+        <div className="bg-black bg-opacity-40 p-3 rounded-sm">
+          <p className="text-xs font-mono text-green-400">
+            GPG: 0x4F9A 8B2C 11D3
+          </p>
+          <p className="text-xs font-mono text-green-400 mt-1">
+            FREQ: 462.5 kHz (UVB-76)
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default function Home() {
+  const [activeTab, setActiveTab] = useState('home');
+
+  return (
+    <div className="flex flex-col w-full">
+      {/* Navigation */}
+      <nav className="bg-[#1a365d] text-white shadow-md z-10 relative w-full">
+        <ul className="flex flex-wrap text-sm font-medium">
+          <li>
+            <button 
+              onClick={() => setActiveTab('home')} 
+              className={`block px-6 py-4 hover:bg-[#2a4a7f] hover:text-red-200 transition-colors border-r border-[#2a4a7f] ${activeTab === 'home' ? 'bg-[#2a4a7f] text-red-200' : ''}`}
             >
-              <span className="inline-block py-1 px-3 rounded-full bg-emerald-100 text-emerald-800 text-sm font-semibold tracking-wider mb-6">
-                MATHEMATIK & NATURVERBUNDENHEIT
-              </span>
-              <h1 className="text-5xl md:text-7xl font-extrabold text-stone-900 tracking-tight mb-8">
-                Die Faszination der <br className="hidden md:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 to-teal-600">
-                  ZahlenrÃ¤tsel
-                </span>
-              </h1>
-              <p className="mt-4 text-xl text-stone-600 max-w-3xl mx-auto leading-relaxed">
-                Willkommen auf der Seite von <a href="https://vibehacker88.github.io" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline font-medium">VibeHacker88</a>. 
-                Tauche ein in die Welt von Clifford A. Pickover, Harvey Dubner, Kuchen TV und Herr Kuchen. 
-                Entdecke die SchÃ¶nheit der Mathematik und die Faszination von ZahlenrÃ¤tseln.
-              </p>
-              <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                <a
-                  href="#pickover"
-                  className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-700 hover:bg-emerald-800 transition-colors shadow-sm"
-                >
-                  Zu den RÃ¤tseln <ChevronRight className="ml-2 -mr-1 h-5 w-5" />
-                </a>
-                <a
-                  href="#masters"
-                  className="inline-flex items-center justify-center px-8 py-3 border border-stone-300 text-base font-medium rounded-md text-stone-700 bg-white hover:bg-stone-50 transition-colors shadow-sm"
-                >
-                  Weitere RÃ¤tselmeister <BrainCircuit className="ml-2 -mr-1 h-5 w-5 text-emerald-600" />
-                </a>
-              </div>
-            </motion.div>
-          </div>
-        </section>
+              Startseite
+            </button>
+          </li>
+          <li>
+            <button 
+              onClick={() => setActiveTab('pickover')} 
+              className={`block px-6 py-4 hover:bg-[#2a4a7f] hover:text-red-200 transition-colors border-r border-[#2a4a7f] ${activeTab === 'pickover' ? 'bg-[#2a4a7f] text-red-200' : ''}`}
+            >
+              Clifford A. Pickover
+            </button>
+          </li>
+          <li>
+            <button 
+              onClick={() => setActiveTab('gru')} 
+              className={`block px-6 py-4 hover:bg-[#2a4a7f] hover:text-red-200 transition-colors border-r border-[#2a4a7f] ${activeTab === 'gru' ? 'bg-[#2a4a7f] text-red-200' : ''}`}
+            >
+              GRU Historie &amp; Ops
+            </button>
+          </li>
+          <li>
+            <button 
+              onClick={() => setActiveTab('synergy')} 
+              className={`block px-6 py-4 hover:bg-[#2a4a7f] hover:text-red-200 transition-colors ${activeTab === 'synergy' ? 'bg-[#2a4a7f] text-red-200' : ''}`}
+            >
+              Verwandte Konzepte
+            </button>
+          </li>
+        </ul>
+      </nav>
 
-        {/* Pickover Section */}
-        <section id="pickover" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <h2 className="text-3xl font-bold text-stone-900 mb-6 flex items-center gap-3">
-                  <BrainCircuit className="text-emerald-600" size={32} />
-                  Clifford A. Pickover
-                </h2>
-                <div className="prose prose-lg prose-stone text-stone-600">
-                  <p>
-                    Im Kern beschÃ¤ftigt sich diese Seite mit den faszinierenden Arbeiten von <a href="https://de.wikipedia.org/wiki/Clifford_A._Pickover" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">Clifford A. Pickover</a>. 
-                    Als produktiver Autor, Wissenschaftler und Erfinder hat er die Art und Weise, wie wir Ã¼ber Mathematik, Muster und das Universum denken, maÃŸgeblich geprÃ¤gt.
-                  </p>
-                  <p>
-                    Besonders seine ZahlenrÃ¤tsel und mathematischen Entdeckungen, wie die <strong>Vampirzahlen</strong> (Zahlen, die als Produkt von zwei &quot;ReiÃŸzÃ¤hnen&quot; geschrieben werden kÃ¶nnen, welche die gleichen Ziffern wie die ursprÃ¼ngliche Zahl enthalten), fesseln mich seit Jahren.
-                  </p>
-                  <p>
-                    Pickovers FÃ¤higkeit, komplexe mathematische Konzepte mit Kunst, Philosophie und Science-Fiction zu verweben, macht seine RÃ¤tsel nicht nur zu logischen Herausforderungen, sondern zu echten Bewusstseinserweiterungen.
-                  </p>
-                </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="mt-10 lg:mt-0 relative rounded-2xl overflow-hidden shadow-xl aspect-square lg:aspect-auto lg:h-[500px]"
-              >
-                <Image
-                  src="https://picsum.photos/seed/cliffordpickover/800/1000"
-                  alt="Clifford A. Pickover - Mathematiker und Autor"
-                  fill
-                  className="object-cover"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 to-transparent flex items-end p-8">
-                  <p className="text-white font-medium text-lg">&quot;Mathematik ist der Webstuhl, auf dem Gott das Universum webt.&quot;</p>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Other Masters Section */}
-        <section id="masters" className="py-20 bg-stone-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-stone-900 mb-4">Weitere RÃ¤tselmeister</h2>
-              <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-                Neben Pickover gibt es weitere brillante KÃ¶pfe, deren kryptografische und mathematische Herausforderungen diese Seite prÃ¤gen.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  name: 'Kuchen TV',
-                  role: 'Entertainment & RÃ¤tsel',
-                  desc: 'Ein einzigartiger Content-Creator, der mit humorvollen und kreativen AnsÃ¤tzen die Welt der RÃ¤tsel und mathematischen KuriositÃ¤ten einem breiten Publikum nÃ¤herbringt.',
-                  seed: 'entertainmentpuzzle'
-                },
-                {
-                  name: 'Herr Kuchen',
-                  role: 'Mathematische Philosophie',
-                  desc: 'Ein mysteriÃ¶ser Geist in der Welt der ZahlenrÃ¤tsel. Die komplexen Muster und logischen VerknÃ¼pfungen in den Arbeiten von Herr Kuchen erfordern oft unkonventionelle LÃ¶sungsansÃ¤tze.',
-                  seed: 'philosophymath'
-                },
-                {
-                  name: 'Harvey Dubner',
-                  role: 'Primzahlen & Mathematik',
-                  desc: 'Bekannt fÃ¼r seine BeitrÃ¤ge zur Suche nach groÃŸen Primzahlen und die Dubner-Vermutung. Seine Arbeit an Repunit-Primzahlen und anderen speziellen Zahlenformen ist ein Fest fÃ¼r jeden Zahlentheoretiker.',
-                  seed: 'harveydubner'
-                }
-              ].map((master, index) => (
-                <motion.div
-                  key={master.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  <div className="h-48 relative">
-                    <Image
-                      src={`https://picsum.photos/seed/${master.seed}/600/400`}
-                      alt={master.name}
-                      fill
-                      className="object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-stone-900 mb-1">{master.name}</h3>
-                    <p className="text-sm font-medium text-emerald-600 mb-4">{master.role}</p>
-                    <p className="text-stone-600 text-sm leading-relaxed">{master.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 text-white mb-4">
-                <Binary size={24} className="text-emerald-500" />
-                <span className="text-xl font-bold tracking-tight">VibeHacker88</span>
-              </div>
-              <p className="text-sm leading-relaxed max-w-xs">
-                Die Schnittstelle zwischen komplexen ZahlenrÃ¤tseln, Mathematik und kreativen DenkansÃ¤tzen.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="https://vibehacker88.github.io" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">VibeHacker88 GitHub</a></li>
-                <li><a href="https://de.wikipedia.org/wiki/Clifford_A._Pickover" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Clifford A. Pickover (Wiki)</a></li>
-                <li><a href="https://de.wikipedia.org/wiki/Harvey_Dubner" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Harvey Dubner (Wiki)</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="pt-8 border-t border-stone-800 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center">
-            <p>&copy; {new Date().getFullYear()} VibeHacker88. Alle Rechte vorbehalten.</p>
-            <p className="mt-2 md:mt-0 text-stone-500">
-              Inspiriert von der Struktur klassischer Vereinsseiten, neu interpretiert fÃ¼r die Welt der ZahlenrÃ¤tsel.
-            </p>
-          </div>
+      <main className="flex-grow flex flex-col md:flex-row bg-white">
+        {/* Left Column - Main Content */}
+        <div className="w-full md:w-2/3 p-8 md:p-12 border-r border-gray-200">
+          {activeTab === 'home' && <TabHome />}
+          {activeTab === 'pickover' && <TabPickover />}
+          {activeTab === 'gru' && <TabGRU />}
+          {activeTab === 'synergy' && <TabSynergy />}
         </div>
-      </footer>
+
+        {/* Right Column - Sidebar */}
+        <Sidebar />
+      </main>
     </div>
   );
 }
