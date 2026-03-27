@@ -8,35 +8,27 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  // GitHub Pages configuration for user site (served at root)
-  output: 'export',
-  distDir: 'dist',
-  basePath: '',
-  assetPrefix: '',
+  // Allow access to remote placeholder images.
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'upload.wikimedia.org',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.ytimg.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'unavatar.io',
+        hostname: 'picsum.photos',
         port: '',
         pathname: '/**',
       },
     ],
   },
+  output: 'standalone',
   transpilePackages: ['motion'],
+  webpack: (config, {dev}) => {
+    if (dev && process.env.DISABLE_HMR === 'true') {
+      config.watchOptions = {
+        ignored: /.*/,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
